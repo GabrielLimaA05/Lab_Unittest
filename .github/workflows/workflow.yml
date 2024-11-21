@@ -27,7 +27,16 @@ jobs:
          pip install Flask-Swagger-UI
          python3 -m unittest
 
-deploy:
+#Deploy da aplicação
+
+name: Deploy to Render
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  deploy:
     needs: WorkFlow
     runs-on: ubuntu-latest
 
