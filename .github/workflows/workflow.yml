@@ -1,12 +1,12 @@
-name: WorkFlow
+name: CI and Deploy
 
 on: 
   pull_request:
     branches:
-      'main'
+      - 'main'
   push:
     branches:
-      'main'
+      - 'main'
 
 jobs:
   continuous-integration:
@@ -18,7 +18,7 @@ jobs:
       - name: Using python
         uses: actions/setup-python@v4
         with:
-         python-version: v3.10.12
+         python-version: '3.10.12'
       
       - name: run install and test
         run: |
@@ -27,17 +27,8 @@ jobs:
          pip install Flask-Swagger-UI
          python3 -m unittest
 
-#Deploy da aplicação
-
-name: Deploy to Render
-
-on:
-  push:
-  pull_request:
-
-jobs:
   deploy:
-    needs: WorkFlow
+    needs: continuous-integration
     runs-on: ubuntu-latest
 
     steps:
