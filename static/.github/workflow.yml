@@ -1,0 +1,28 @@
+name: WorkFlow
+
+on: 
+  pull_request:
+    branches:
+      'main'
+  push:
+    branches:
+      'main'
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Using python
+        uses: actions/setup-python@v4
+        with:
+         python-version: v3.10.12
+      
+      - name: run install and test
+        run: |
+         pip install Flask
+         pip install Flask-JWT-Extended
+         pip install Flask-Swagger-UI
+         python3 -m unittest
