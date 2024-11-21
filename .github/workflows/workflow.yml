@@ -27,4 +27,19 @@ jobs:
          pip install Flask-Swagger-UI
          python3 -m unittest
 
-##test
+deploy:
+    needs: WorkFlow
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set render API key
+        run: echo "RENDER_API_KEY=${{ secrets.RENDER_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Deploy to render
+        run: |
+          curl -X POST https://api.render.com/deploy/srv-csvkghaj1k6c73c814eg?key=k6vdZ-IV8Pw \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"branch": "main"}'
