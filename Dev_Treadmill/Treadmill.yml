@@ -1,0 +1,47 @@
+name: TreadMill
+
+on: 
+  pull_request:
+    branches:
+      'main'
+  push:
+    branches:
+      'main'
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Using python
+        uses: actions/setup-python@v4
+        with:
+         python-version: v3.10.12
+      
+      - name: run install and test
+        run: |
+         pip install flask
+         pip install Flask-SQLAlchemy
+         python3 -m unittest
+
+
+  deploy:
+    
+    needs: continuous-integration
+    runs-on: ubuntu-latest
+
+    steps:
+      
+      - uses: actions/checkout@v3
+
+      - name: Set render API key
+        run: echo "RENDER_API_KEY=${{ secrets.RENDER_API_KEY }}" >> $GITHUB_ENV
+
+      - name: Deploy to render
+        run: |
+          curl -X POST https://api.render.com/v1/services/srv-csqjc4i3esus73ctbj9g/deploys \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"branch": "main"}'
